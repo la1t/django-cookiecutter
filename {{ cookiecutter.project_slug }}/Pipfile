@@ -4,11 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+ipython = "*"
 
 [packages]
 django = "*"
 django-environ = "*"
 sentry-sdk = "*"
-
-[requires]
-python_version = "3.7"
+django-anymail = "*"
+gunicorn = "*"
+psycopg2 = "*"
+coverage = "*"
+django-extensions = "*"
