@@ -5,8 +5,8 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 
 def remove_accounts_app():
-    accounts_path = '{{ cookiecutter.project_slug }}'
-    shutil.removetree(accounts_path)
+    accounts_path = '{{ cookiecutter.project_slug }}/users'
+    shutil.rmtree(accounts_path)
 
 
 def main():
