@@ -2,5 +2,7 @@
   "project_name": "My Awesome Project",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
   "use_custom_user_model": "n",
-  "static_dir": "build/"
+  "static_dir": "build/",
+  "custom_404_page": "y",
+  "remove_built_in_user_and_group_from_admin": "y"
 }
