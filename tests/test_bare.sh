@@ -2,7 +2,7 @@
 
 set -o errexit
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 mkdir -p .cache/bare
 cd .cache/bare
