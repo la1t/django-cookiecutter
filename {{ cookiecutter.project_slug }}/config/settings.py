@@ -162,3 +162,17 @@ if env('MAILGUN_API_KEY', default=None):
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
 SERVER_EMAIL = env('SERVER_EMAIL', default='root@localhost')
+
+# --------------------------------------------------------------------------------------------------
+# - CELERY -----------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+
+CELERY_BROKER_URL = env('RABBITMQ_URL', default='localhost')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+# --------------------------------------------------------------------------------------------------
+# - TESTS ------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+
+TEST_RUNNER = 'bath_expert.utils.test_runner.CeleryTestSuiteRunner'

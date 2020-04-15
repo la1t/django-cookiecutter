@@ -1,6 +1,7 @@
 {
   "project_name": "My Awesome Project",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "python_version": "3.8",
   "use_custom_user_model": "n",
   "static_dir": "build/",
   "custom_404_page": "y",
