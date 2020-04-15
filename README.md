@@ -13,11 +13,11 @@ Powered by [Cookiecutter](https://github.com/audreyr/cookiecutter), Cookiecutter
 
 ## Usage
 
-First, get Cookiecutter and Pipenv::
+First, get Cookiecutter and Pipenv:
 
     $ pip install cookiecutter pipenv
 
-Now run it against this repo::
+Now run it against this repo:
 
     $ cookiecutter https://github.com/la1t/django-cookiecutter
 
