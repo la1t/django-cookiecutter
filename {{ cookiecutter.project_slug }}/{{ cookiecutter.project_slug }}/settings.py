@@ -177,4 +177,4 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 # - TESTS ------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------------
 
-TEST_RUNNER = 'bath_expert.utils.test_runner.CeleryTestSuiteRunner'
+TEST_RUNNER = '{{ cookiecutter.project_slug }}.utils.test_runner.CeleryTestSuiteRunner'
