@@ -27,7 +27,9 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
+THIRD_PART_APPS = [
     'django_extensions',
 ]
 
@@ -37,7 +39,7 @@ LOCAL_APPS = [
     {%- endif %}
 ]
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PART_APPS + LOCAL_APPS
 
 
 MIDDLEWARE = [
