@@ -15,6 +15,7 @@ gunicorn = "*"
 psycopg2 = "*"
 coverage = "*"
 django-extensions = "*"
+celery = "*"
 
 [requires]
 python_version = "{{ cookiecutter.python_version }}"
