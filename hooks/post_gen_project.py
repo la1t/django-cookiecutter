@@ -16,7 +16,7 @@ def create_virtualenv(version):
 
 
 def install_dependencies():
-    os.system('pipenv install')
+    os.system('pipenv install --dev')
 
 
 def init_repo():
