@@ -10,10 +10,10 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    {% if cookiecutter.custom_404_page == 'y' %}
+    {% if cookiecutter.custom_404_page == 'y' -%}
     urlpatterns.append(path('404/', handler404))
-    {% endif %}
+    {%- endif %}
 
-{% if cookiecutter.custom_404_page == 'y' %}
+{% if cookiecutter.custom_404_page == 'y' -%}
 handler404 = '{{ cookiecutter.project_slug }}.main.views.handler404'
-{% endif %}
+{%- endif %}
