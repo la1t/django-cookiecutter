@@ -99,9 +99,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-{% if cookiecutter.use_custom_user_model == 'y' %}
+{% if cookiecutter.use_custom_user_model == 'y' -%}
 AUTH_USER_MODEL = 'users.ExtUser'
-{% endif -%}
+{%- endif %}
 
 # -----------------------------------------------------------------------------------------------
 # - SECURITY ------------------------------------------------------------------------------------
