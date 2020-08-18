@@ -2,7 +2,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+{% if cookiecutter.custom_404_page == 'y' -%}
 from {{ cookiecutter.project_slug }}.main.views import handler404
+{%- endif %}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
