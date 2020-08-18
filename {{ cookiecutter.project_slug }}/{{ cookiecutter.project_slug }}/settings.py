@@ -1,13 +1,13 @@
 import os
 
 import environ
+
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # --------------------------------------------------------------------------------------------------
 # - BASE -------------------------------------------------------------------------------------------
