@@ -2,4 +2,4 @@ test:
 	sh ./tests/test_bare.sh
 
 create_project:
-	cd .cache/ && cookiecutter ../
+	cd .cache/ && rm -rf * && cookiecutter ../
