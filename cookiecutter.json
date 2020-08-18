@@ -3,6 +3,5 @@
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
   "python_version": "3.8",
   "use_custom_user_model": "n",
-  "static_dir": "assets/",
-  "remove_built_in_user_and_group_from_admin": "y"
+  "static_dir": "assets/"
 }
