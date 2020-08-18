@@ -34,7 +34,8 @@ THIRD_PART_APPS = [
 ]
 
 LOCAL_APPS = [
-    {% if cookiecutter.use_custom_user_model == 'y' -%}
+    '{{ cookiecutter.project_slug }}.main',
+    {%- if cookiecutter.use_custom_user_model == 'y' %}
     '{{ cookiecutter.project_slug }}.users',
     {%- endif %}
 ]
@@ -99,7 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-{% if cookiecutter.use_custom_user_model == 'y' -%}
+{%- if cookiecutter.use_custom_user_model == 'y' %}
+
 AUTH_USER_MODEL = 'users.ExtUser'
 {%- endif %}
 
