@@ -4,6 +4,6 @@
   "python_version": "3.8",
   "use_custom_user_model": "n",
   "static_dir": "build/",
-  "custom_404_page": "y",
+  "custom_404_page": "n",
   "remove_built_in_user_and_group_from_admin": "y"
 }
