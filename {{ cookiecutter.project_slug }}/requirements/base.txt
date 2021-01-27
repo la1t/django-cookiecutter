@@ -1,0 +1,14 @@
+django
+django-environ
+django-anymail
+sentry-sdk
+django-extensions
+celery
+pytest
+pytest-django
+pytest-xdist
+whitenoise
+gunicorn
+psycopg2
+factory-boy
+ipython

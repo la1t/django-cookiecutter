@@ -1,0 +1,10 @@
+[MASTER]
+load-plugins=pylint_django
+django-settings-module={{ cookiecutter.project_slug }}.settings
+ignore=migrations
+
+[FORMAT]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=invalid-name,missing-docstring,C0330,C0326

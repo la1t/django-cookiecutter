@@ -125,10 +125,7 @@ dmypy.json
 .pyre/
 
 node_modules/
-/templates/
-/locales/
-/uploads/
 
-.idea/
+# Django var paths
+/uploads/
 /static/
-/tmp/

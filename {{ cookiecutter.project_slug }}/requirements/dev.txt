@@ -1,0 +1,9 @@
+-r ./base.txt
+
+pre-commit
+pylint
+pylint-django
+pylint-celery
+rope
+black
+isort
