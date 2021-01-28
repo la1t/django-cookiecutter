@@ -1,6 +1,9 @@
+pytz
+Pillow
 django
 django-environ
-django-anymail
+django-anymail[mailgun]
+django-s3-storage
 sentry-sdk
 django-extensions
 celery
@@ -12,3 +15,9 @@ gunicorn
 psycopg2
 factory-boy
 ipython
+argon2-cffi
+{%- if cookiecutter.rest_framework == 'y' %}
+djangorestframework
+django-cors-headers
+drf-yasg
+{%- endif %}

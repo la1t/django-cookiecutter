@@ -47,6 +47,10 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_extensions",
+{%- if cookiecutter.rest_framework == 'y' %}
+    "rest_framework",
+    "corsheaders",
+{%- endif %}
 ]
 
 LOCAL_APPS = []
@@ -97,6 +101,9 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+{%- if cookiecutter.rest_framework == 'y' %}
+    "corsheaders.middleware.CorsMiddleware",
+{%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -152,6 +159,22 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
 
 
+{%- if cookiecutter.rest_framework == 'y' %}
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "cache-control",
+]
+{%- endif %}
+
 # EMAIL
 # ------------------------------------------------------------------------------
 if env("MAILGUN_API_KEY", default=None):
@@ -167,9 +190,14 @@ SERVER_EMAIL = env("SERVER_EMAIL", default="root@localhost")
 
 # CELERY
 # ------------------------------------------------------------------------------
-CELERY_BROKER_URL = env("BROKER_URL", default=None)
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 60
 
 
 # SENTRY
@@ -193,3 +221,32 @@ if AWS_ACCESS_KEY_ID:
     AWS_S3_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
     AWS_REGION = env("AWS_S3_REGION_NAME")
     DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+
+
+{%- if cookiecutter.rest_framework == 'y' %}
+# REST FRAMEWORK
+# ------------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "EXCEPTION_HANDLER": "{{ cookiecutter.project_slug }}.core.api.exceptions_handlers.exception_handler",
+    "DEFAULT_PERMISSION_CLASSES": [
+        "{{ cookiecutter.project_slug }}.core.api.permissions.NotAllowed",
+    ],
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+}
+
+SWAGGER_SETTINGS = {
+    "DEFAULT_AUTH_SCHEMA_CLASS": "{{ cookiecutter.project_slug }}.core.swagger_inspectors.SwaggerAutoSchema",
+    "USER_SESSION_AUTH": False,
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    },
+    "PERSIST_AUTH": True,
+}
+{%- endif %}

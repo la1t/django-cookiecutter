@@ -5,6 +5,9 @@ from django.urls import path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+{%- if cookiecutter.rest_framework == 'y' %}
+    path("api/docs/", include("{{ cookiecutter.project_slug }}.swagger.urls")),
+{%- endif %}
 ]
 
 if settings.DEBUG:
