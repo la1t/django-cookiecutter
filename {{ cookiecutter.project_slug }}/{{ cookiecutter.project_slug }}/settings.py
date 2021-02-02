@@ -58,6 +58,19 @@ LOCAL_APPS = []
 INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 
+# INTERNATIONALIZATION
+# ------------------------------------------------------------------------------
+LANGUAGE_CODE = "ru"
+
+TIME_ZONE = "Europe/Moscow"
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
@@ -192,7 +205,7 @@ SERVER_EMAIL = env("SERVER_EMAIL", default="root@localhost")
 # ------------------------------------------------------------------------------
 if USE_TZ:
     CELERY_TIMEZONE = TIME_ZONE
-CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=None)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -219,7 +232,10 @@ if AWS_ACCESS_KEY_ID:
     AWS_S3_BUCKET_NAME = env("AWS_S3_BUCKET_NAME")
     AWS_S3_BUCKET_AUTH = False
     AWS_S3_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
-    AWS_REGION = env("AWS_S3_REGION_NAME")
+    AWS_REGION = env("AWS_S3_REGION_NAME", default="ru-central1")
+    AWS_S3_ENDPOINT_URL = env(
+        "AWS_S3_ENDPOINT_URL", default="https://storage.yandexcloud.net/"
+    )
     DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
 
 

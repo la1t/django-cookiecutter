@@ -10,6 +10,7 @@ celery
 pytest
 pytest-django
 pytest-xdist
+coverage
 whitenoise
 gunicorn
 psycopg2

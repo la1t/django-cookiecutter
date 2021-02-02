@@ -14,7 +14,7 @@ build:
     - docker:19.03.12-dind
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:e
+  script:
     - docker pull $IMAGE_TAG || true
     - docker build --cache-from=$IMAGE_TAG --tag $IMAGE_TAG .
     - docker push $IMAGE_TAG

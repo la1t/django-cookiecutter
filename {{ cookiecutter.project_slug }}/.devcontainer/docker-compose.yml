@@ -27,6 +27,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - EMAIL_URL=smtp://mailhog:1025
+      - CELERY_BROKER_URL=amqp://rabbitmq:5672
 
   db:
     image: postgres:latest
@@ -42,6 +43,9 @@ services:
     image: mailhog/mailhog:v1.0.0
     ports:
       - 8025:8025
+  
+  rabbitmq:
+    image: library/rabbitmq:3.8.9-alpine
 
 volumes:
   postgres-data:
