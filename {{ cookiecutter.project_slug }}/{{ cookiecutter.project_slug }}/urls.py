@@ -6,7 +6,7 @@ from django.urls import path{% if cookiecutter.rest_framework == 'y' }, include{
 urlpatterns = [
     path("admin/", admin.site.urls),
 {%- if cookiecutter.rest_framework == 'y' %}
-    path("api/docs/", include("{{ cookiecutter.project_slug }}.swagger.urls")),
+    path("api/schema/", include("{{ cookiecutter.project_slug }}.schema.urls")),
 {%- endif %}
 ]
 
