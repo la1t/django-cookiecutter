@@ -20,5 +20,5 @@ argon2-cffi
 {%- if cookiecutter.rest_framework == 'y' %}
 djangorestframework
 django-cors-headers
-drf-yasg
+drf_spectacular
 {%- endif %}
