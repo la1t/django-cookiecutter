@@ -48,7 +48,7 @@ THIRD_PARTY_APPS = [
 {%- if cookiecutter.rest_framework == 'y' %}
     "rest_framework",
     "corsheaders",
-    'drf_yasg',
+    "drf_spectacular",
 {%- endif %}
 ]
 
@@ -202,8 +202,6 @@ SERVER_EMAIL = env("SERVER_EMAIL", default="root@localhost")
 
 # CELERY
 # ------------------------------------------------------------------------------
-if USE_TZ:
-    CELERY_TIMEZONE = TIME_ZONE
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default=None)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -211,16 +209,15 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
+
 
 # SENTRY
 # ------------------------------------------------------------------------------
-SENTRY_DJANGO = env("SENTRY_DJANGO", default=None)
-if SENTRY_DJANGO is not None:
-    sentry_sdk.init(dsn=SENTRY_DJANGO, integrations=[DjangoIntegration()])
-
-SENTRY_CELERY = env("SENTRY_CELERY", default=None)
-if SENTRY_CELERY is not None:
-    sentry_sdk.init(SENTRY_CELERY, integrations=[CeleryIntegration()])
+SENTRY_SDK = env("SENTRY_SDK", default=None)
+if SENTRY_SDK is not None:
+    sentry_sdk.init(dsn=SENTRY_SDK, integrations=[DjangoIntegration(), CeleryIntegration()])
 
 
 # STORAGES
@@ -245,23 +242,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "EXCEPTION_HANDLER": "{{ cookiecutter.project_slug }}.core.api.exceptions_handlers.exception_handler",
-    "DEFAULT_PERMISSION_CLASSES": [
-        "{{ cookiecutter.project_slug }}.core.api.permissions.NotAllowed",
-    ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
-}
-
-SWAGGER_SETTINGS = {
-    "DEFAULT_AUTH_SCHEMA_CLASS": "{{ cookiecutter.project_slug }}.core.swagger_inspectors.SwaggerAutoSchema",
-    "USER_SESSION_AUTH": False,
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-        }
-    },
-    "PERSIST_AUTH": True,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 {%- endif %}
