@@ -61,14 +61,14 @@ def install_pre_commit_hook():
 def init_repo():
     os.system('git init')
     os.system('git add .')
-    os.system('git commit -q -m "Initial commit"')
+    os.system('git commit -q -m "first commit"')
     install_pre_commit_hook()
 
 
 def delete_drf_dirs():
     core_path = '{{ cookiecutter.project_slug }}/core'
     shutil.rmtree(core_path)
-    swagger_path = '{{ cookiecutter.project_slug }}/swagger'
+    swagger_path = '{{ cookiecutter.project_slug }}/schema'
     shutil.rmtree(swagger_path)
 
 
