@@ -1,5 +1,3 @@
-import locale
-import sys
 from pathlib import Path
 
 import environ
@@ -50,6 +48,7 @@ THIRD_PARTY_APPS = [
 {%- if cookiecutter.rest_framework == 'y' %}
     "rest_framework",
     "corsheaders",
+    'drf_yasg',
 {%- endif %}
 ]
 
