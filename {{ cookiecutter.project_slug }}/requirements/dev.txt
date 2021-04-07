@@ -1,9 +1,8 @@
 -r ./base.txt
 
 pre-commit
-pylint
-pylint-django
-pylint-celery
 rope
 black
 isort
+flake8
+flake8-isort
