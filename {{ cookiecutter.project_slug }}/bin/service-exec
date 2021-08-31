@@ -3,12 +3,12 @@ set -e
 
 SERVICE_NAME=$1; shift
 DOCKER_CMD=docker
-
+{% raw %}
 TASK_ID=$(${DOCKER_CMD} service ps --filter 'desired-state=running' $SERVICE_NAME -q)
 NODE_ID=$(${DOCKER_CMD} inspect --format '{{ .NodeID }}' $TASK_ID)
 CONTAINER_ID=$(${DOCKER_CMD} inspect --format '{{ .Status.ContainerStatus.ContainerID }}' $TASK_ID)
 TASK_NAME=swarm_exec_${RANDOM}
-
+{% endraw %}
 TASK_ID=$(${DOCKER_CMD} service create \
   --detach \
   --name=${TASK_NAME} \
