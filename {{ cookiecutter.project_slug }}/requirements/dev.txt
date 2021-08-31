@@ -1,8 +1,0 @@
--r ./base.txt
-
-pre-commit
-rope
-black
-isort
-flake8
-flake8-isort
