@@ -45,11 +45,9 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_extensions",
-{%- if cookiecutter.rest_framework == 'y' %}
     "rest_framework",
     "corsheaders",
     "drf_spectacular",
-{%- endif %}
 ]
 
 LOCAL_APPS = []
@@ -113,9 +111,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-{%- if cookiecutter.rest_framework == 'y' %}
     "corsheaders.middleware.CorsMiddleware",
-{%- endif %}
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -170,8 +166,6 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-
-{%- if cookiecutter.rest_framework == 'y' %}
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -185,7 +179,6 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "cache-control",
 ]
-{%- endif %}
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -235,7 +228,6 @@ if AWS_ACCESS_KEY_ID:
     DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
 
 
-{%- if cookiecutter.rest_framework == 'y' %}
 # REST FRAMEWORK
 # ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
@@ -245,4 +237,3 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
-{%- endif %}

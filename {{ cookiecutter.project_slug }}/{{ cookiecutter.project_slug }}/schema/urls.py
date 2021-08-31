@@ -1,13 +1,9 @@
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.urls import path
 
-app_name = "schema"
+app_name = "docs"
 
 urlpatterns = [
-    path("", SpectacularAPIView.as_view(), name="schema"),
-    path("swagger-ui/", SpectacularSwaggerView.as_view(url_name="schema:schema"), name="swagger-ui")
+    path("", SpectacularSwaggerView.as_view(url_name="docs:schema"), name="swagger-ui"),
+    path("swagger.json", SpectacularAPIView.as_view(), name="schema"),
 ]

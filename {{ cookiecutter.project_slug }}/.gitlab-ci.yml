@@ -1,85 +1,53 @@
 stages:
   - build
-  - test
   - deploy
 
-variables:
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
-  DOKKU_SERVER: {{ cookiecutter.dokku_server_url }}
-
-build:
+.build:
   image: docker:19.03.12
   stage: build
-  services:
-    - docker:19.03.12-dind
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $IMAGE_TAG || true
-    - docker build --cache-from=$IMAGE_TAG --tag $IMAGE_TAG .
-    - docker push $IMAGE_TAG
-
-test:
-  image: $IMAGE_TAG
-  services:
-    - postgres
-  variables:
-    POSTGRES_DB: postgres
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
-    DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-    GIT_STRATEGY: none
-  script:
-    - cd /app
-    - coverage run -m pytest --junitxml=xunit.xml -n auto
-    - coverage report
-    - coverage xml
-    - cd -
-    - cp /app/xunit.xml ./ || true
-    - cp /app/coverage.xml ./ || true
-  artifacts:
-    paths:
-      - ./xunit.xml
-      - ./coverage.xml
-    reports:
-      junit: xunit.xml
-      cobertura: coverage.xml
-
-.deploy:
-  image: docker:19.03.12
-  services:
-    - docker:19.03.12-dind
-  stage: deploy
-  variables:
-    APP_NAME: # here dokku app name
   only:
     - master
   before_script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $IMAGE_TAG
-    - docker save $IMAGE_TAG | ssh $DOKKU_SERVER "docker load"
-    - |
-      ssh -t $DOKKU_SERVER << EOF
-        docker tag $IMAGE_TAG dokku/${APP_NAME}:latest
-        dokku tags:deploy $APP_NAME
-      EOF
 
-deploy to staging:
-  extends: .deploy
+build backend:
+  extends: .build
   variables:
-    APP_NAME: {{ cookiecutter.project_slug }}
-    GIT_STRATEGY: none
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+  script:
+    - docker pull $IMAGE_TAG || true
+    - docker build --cache-from=$IMAGE_TAG --tag=$IMAGE_TAG .
+    - docker push $IMAGE_TAG
 
-# Uncomment this after starting production environment
-# deploy to production:
-#   extends: .deploy
-#   when: manual
-#   variables:
-#     APP_NAME: {{ cookiecutter.project_slug }}
-#     GIT_STRATEGY: none
+.deploy:
+  image: docker/compose
+  stage: deploy
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "/docker-cert"
+    DOCKER_HOST: "$SWARM_HOST"
+  before_script:
+    - mkdir -p /docker-cert
+    - echo "$SWARM_CA_CERT" > /docker-cert/ca.pem
+    - echo "$SWARM_CERT" > /docker-cert/cert.pem
+    - echo "$SWARM_KEY" > /docker-cert/key.pem
+    - cat /docker-cert/ca.pem
+    - cat /docker-cert/cert.pem
+    - cat /docker-cert/key.pem
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+deploy stage:
+  extends: .deploy
+  environment: stage
+  script:
+    - docker stack deploy -c .swarm/base.yml -c .swarm/stage.yml --with-registry-auth {{ cookiecutter.project_slug }}_stage
+    - sh bin/service-exec {{ cookiecutter.project_slug }}_stage_app python manage.py migrate
+
+deploy prod:
+  extends: .deploy
+  environment: prod
+  when: manual
+  script:
+    - docker stack deploy -c .swarm/base.yml -c .swarm/prod.yml --with-registry-auth {{ cookiecutter.project_slug }}_prod
+    - sh bin/service-exec {{ cookiecutter.project_slug }}_prod_app python manage.py migrate
