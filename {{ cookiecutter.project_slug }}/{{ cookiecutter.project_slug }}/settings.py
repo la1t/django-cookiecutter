@@ -2,7 +2,6 @@ from pathlib import Path
 
 import environ
 import sentry_sdk
-from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
@@ -210,9 +209,9 @@ if USE_TZ:
 
 # SENTRY
 # ------------------------------------------------------------------------------
-SENTRY_SDK = env("SENTRY_SDK", default=None)
-if SENTRY_SDK is not None:
-    sentry_sdk.init(dsn=SENTRY_SDK, integrations=[DjangoIntegration(), CeleryIntegration()])
+SENTRY_DSN = env("SENTRY_DSN", default=None)
+if SENTRY_DSN is not None:
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
 
 
 # STORAGES
