@@ -5,7 +5,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/docs/", include("{{ cookiecutter.project_slug }}.schema.urls")),
+    path("api/docs/", include("{{ cookiecutter.project_slug }}.swagger.urls")),
 ]
 
 if settings.DEBUG:
