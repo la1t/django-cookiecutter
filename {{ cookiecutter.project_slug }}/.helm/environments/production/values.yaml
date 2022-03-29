@@ -2,9 +2,9 @@ global:
   backend:
     env:
       DJANGO_SECRET_KEY: ""
-      DJANGO_ALLOWED_HOSTS: "{{ project_domain }}"
+      DJANGO_ALLOWED_HOSTS: "{{ cookiecutter.project_domain }}"
 
-      DATABASE_URL: postgres://{{ project_slug }}:{{ project_slug }}@backend-postgresql:5432/{{ project_slug }}
+      DATABASE_URL: postgres://{{ cookiecutter.project_slug }}:{{ cookiecutter.project_slug }}@backend-postgresql:5432/{{ cookiecutter.project_slug }}
 
 web:
   ingress:
@@ -12,10 +12,10 @@ web:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
     tls:
       - hosts:
-          - {{ project_domain }}
-        secretName: {{ project_slug }}-tls
+          - {{ cookiecutter.project_domain }}
+        secretName: {{ cookiecutter.project_dash }}-tls
     hosts:
-      - host: {{ project_domain }}
+      - host: {{ cookiecutter.project_domain }}
         paths:
         - /api
         - /static

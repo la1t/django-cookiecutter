@@ -2,7 +2,7 @@ replicaCount: 1
 
 image: {}
 
-command: [ "gunicorn", "{{ project_slug }}.wsgi:application", "-b", "0.0.0.0", "--access-logfile", "-", "--capture-output", "--threads", "5" ]
+command: [ "gunicorn", "{{ cookiecutter.project_slug }}.wsgi:application", "-b", "0.0.0.0", "--access-logfile", "-", "--capture-output", "--threads", "5" ]
 
 args:
   - -b

@@ -1,11 +1,11 @@
 global:
   backend:
     image:
-      repository: {{ image_repo }}
+      repository: {{ cookiecutter.image_repo }}
       tag: latest
       pullPolicy: IfNotPresent
       pullSecrets:
-        - {{ project_slug }}-pullsecret
+        - {{ cookiecutter.project_dash }}-pullsecret
     env:
       CONTAINER_PORT: 8000
 
@@ -74,9 +74,9 @@ postgresql:
   postgresPassword: postgres
   auth:
     postgresPassword: postgres
-    username: {{ project_slug }}
-    password: {{ projecct_slug }}
-    database: {{ project_slug }}
+    username: {{ cookiecutter.project_slug }}
+    password: {{ cookiecutter.project_slug }}
+    database: {{ cookiecutter.project_slug }}
   primary:
     persistence:
       size: 1Gi
