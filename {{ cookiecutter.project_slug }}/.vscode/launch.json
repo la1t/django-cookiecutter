@@ -13,6 +13,13 @@
               "runserver"
           ],
           "django": true
+      },
+      {
+        "name": "Test",
+        "type": "python",
+        "request": "test",
+        "console": "internalConsole",
+        "justMyCode": false
       }
   ]
 }

@@ -48,7 +48,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "rest_framework",
     "corsheaders",
-    "drf_spectacular",
+    "drf_yasg",
 ]
 
 LOCAL_APPS = []
@@ -187,11 +187,12 @@ if env("MAILGUN_API_KEY", default=None):
     ANYMAIL = {
         "MAILGUN_API_KEY": env("MAILGUN_API_KEY"),
         "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN"),
+        "MAILGUN_API_URL": env("MAILGUN_API_URL", default="https://api.mailgun.net/v3"),
     }
     EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
-SERVER_EMAIL = env("SERVER_EMAIL", default="root@localhost")
+DEFAULT_FROM_EMAIL = env("DJANGO_DEFAULT_FROM_EMAIL", default="webmaster@localhost")
+SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default="root@localhost")
 
 
 # CELERY
@@ -211,7 +212,14 @@ if USE_TZ:
 # ------------------------------------------------------------------------------
 SENTRY_DSN = env("SENTRY_DSN", default=None)
 if SENTRY_DSN is not None:
-    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
+    sentry_sdk.init(
+        dsn=SENTRY_DSN, 
+        integrations=[DjangoIntegration()],
+        # adjust it if you are getting too much traces
+        traces_sample_rate=1,
+        send_default_pii=True,
+        environment=env("SENTRY_ENVIRONMENT", default="dev")
+    )
 
 
 # STORAGES
@@ -233,8 +241,20 @@ if AWS_ACCESS_KEY_ID:
 # ------------------------------------------------------------------------------
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+        }
+    }
 }

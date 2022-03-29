@@ -29,7 +29,8 @@
 		"mtxr.sqltools-driver-pg",
     "batisteo.vscode-django",
     "editorconfig.editorconfig",
-		"gitlab.gitlab-workflow"
+		"gitlab.gitlab-workflow",
+		"eamodio.gitlens"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

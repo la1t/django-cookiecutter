@@ -1,0 +1,86 @@
+global:
+  backend:
+    image:
+      repository: {{ image_repo }}
+      tag: latest
+      pullPolicy: IfNotPresent
+      pullSecrets:
+        - {{ project_slug }}-pullsecret
+    env:
+      CONTAINER_PORT: 8000
+
+      DJANGO_DEBUG: "off"
+      DJANGO_SECRET_KEY: ""
+      DJANGO_ALLOWED_HOSTS: ""
+
+      AWS_S3_ENDPOINT_URL: ""
+      AWS_ACCESS_KEY_ID: ""
+      AWS_S3_BUCKET_NAME: ""
+
+      MAILGUN_SENDER_DOMAIN: ""
+      DJANGO_DEFAULT_FROM_EMAIL: ""
+
+web:
+  replicaCount: 1
+
+  resources: {}
+
+  ingress:
+    hosts:
+      - host:
+        paths:
+        - /api
+        - /static
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+    failureThreshold: 60
+    periodSeconds: 10
+
+  metrics:
+    enabled: false
+    serviceMonitor:
+      endpoints:
+      - port: http
+        path: /metrics
+
+migrations:
+  resources: {}
+
+postgresql:
+  enabled: true
+  image:
+    tag: 14.2.0
+  postgresPassword: postgres
+  auth:
+    postgresPassword: postgres
+    username: {{ project_slug }}
+    password: {{ projecct_slug }}
+    database: {{ project_slug }}
+  primary:
+    persistence:
+      size: 1Gi
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false
