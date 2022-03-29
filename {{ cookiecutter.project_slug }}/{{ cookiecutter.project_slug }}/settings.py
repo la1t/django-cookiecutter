@@ -73,7 +73,7 @@ USE_TZ = True
 # ------------------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -97,7 +97,7 @@ PASSWORD_HASHERS = [
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
@@ -213,7 +213,7 @@ if USE_TZ:
 SENTRY_DSN = env("SENTRY_DSN", default=None)
 if SENTRY_DSN is not None:
     sentry_sdk.init(
-        dsn=SENTRY_DSN, 
+        dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],
         # adjust it if you are getting too much traces
         traces_sample_rate=1,
