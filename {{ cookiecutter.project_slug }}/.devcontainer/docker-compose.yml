@@ -16,12 +16,12 @@ services:
 
     volumes:
       - ..:/workspace:cached
-      - vscode-extensions:/vscode/.vscode-server/extensions
+      - vscode-extensions:/home/vscode/.vscode-server/extensions
+      - ~/.kube/config:/home/vscode/.kube/config
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
-    # Uncomment the next line to use a non-root user for all processes.
     user: vscode
 
     environment:

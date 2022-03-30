@@ -13,9 +13,37 @@ ARG INSTALL_NODE="false"
 ARG NODE_VERSION="lts/*"
 RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
+# Install kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl && \
+    kubectl version --client
+
+# Install helm
+RUN curl -fsSL -o - https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash && \
+    helm version
+
+# Install sops
+RUN wget -nv -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/v3.7.2/sops-v3.7.2.linux.amd64 && \
+    chmod +x /usr/bin/sops
+
+# Install postgresql client
 RUN apt update && \
     apt install -y postgresql-client
 
+# Create extensions directory
+RUN mkdir -p /home/vscode/.vscode-server/extensions && \
+    chown -R vscode:vscode /home/vscode/.vscode-server
+
+# Install poetry
 RUN pip install poetry
+
 USER vscode
+
+# Setup poetry
 RUN poetry config virtualenvs.in-project true
+
+# Install helm-secrets
+RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.12.0
+
+ENV EDITOR "code --wait"
