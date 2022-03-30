@@ -30,7 +30,7 @@ services:
       EMAIL_URL: smtp://mailhog:1025
       PRE_COMMIT_HOME: "/workspace/.cache/pre-commit"
 
-  db:
+  postgres:
     image: postgres:14.2-alpine
     restart: unless-stopped
     volumes:
