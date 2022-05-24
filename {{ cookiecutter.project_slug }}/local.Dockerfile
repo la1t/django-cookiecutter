@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED 1
 # Update args in docker-compose.yaml to set the UID/GID of the "vscode" user.
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ARG USERNAME=vscode
 RUN if [ "$USER_GID" != "1000" ] || [ "$USER_UID" != "1000" ]; then groupmod --gid $USER_GID vscode && usermod --uid $USER_UID --gid $USER_GID vscode; fi
 
 # [Option] Install Node.js
@@ -31,9 +32,9 @@ RUN wget -nv -O /usr/bin/sops https://github.com/mozilla/sops/releases/download/
 RUN apt update && \
     apt install -y postgresql-client
 
-# Create extensions directory
-RUN mkdir -p /home/vscode/.vscode-server/extensions && \
-    chown -R vscode:vscode /home/vscode/.vscode-server
+# Create vscode extensions directory
+RUN mkdir -p /home/$USERNAME/.vscode-server/extensions && \
+    chown -R $USERNAME /home/$USERNAME/.vscode-server
 
 # Install poetry
 RUN pip install poetry
@@ -45,5 +46,3 @@ RUN poetry config virtualenvs.in-project true
 
 # Install helm-secrets
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.12.0
-
-ENV EDITOR "code --wait"
