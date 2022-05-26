@@ -39,10 +39,6 @@ flake8-django = {git = "https://github.com/rocioar/flake8-django.git", rev = "00
 [tool.isort]
 profile = "black"
 
-[tool.pytest]
-DJANGO_SETTINGS_MODULE = "{{ cookiecutter.project_slug }}.settings"
-python_files = ["tests.py", "test_*.py", "*_tests.py"]
-
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
