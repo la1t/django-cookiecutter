@@ -34,6 +34,7 @@ pre-commit = "^2.14.0"
 isort = "^5.9.3"
 rope = "^0.19.0"
 flake8 = "^4.0.1"
+flake8-django = {git = "https://github.com/rocioar/flake8-django.git", rev = "000b0f70eeb84797ffca9cb3fe85bffe6251cbf1"}
 
 [tool.isort]
 profile = "black"
