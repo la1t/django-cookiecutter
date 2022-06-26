@@ -1,3 +1,6 @@
+pullSecret:
+  registry: registry.gitlab.com
+
 global:
   backend:
     image:
