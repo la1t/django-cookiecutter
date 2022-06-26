@@ -88,3 +88,10 @@ Render init container for migrations waiting
   resources: {{- toYaml .Values.resources | nindent 4 }}
   {{- end }}
 {{- end -}}
+
+{{/*
+Create secret to access docker registry
+*/}}
+{{- define "bulldrop.pullSecret" }}
+{{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.pullSecret.registry (printf "%s:%s" .Values.pullSecret.username .Values.pullSecret.password | b64enc) | b64enc }}
+{{- end }}
