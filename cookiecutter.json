@@ -5,10 +5,5 @@
   "project_domain": "{{ cookiecutter.project_slug }}.com",
   "author": "John Doe <john.doe@example.com>",
   "kubecontext": "{{ cookiecutter.project_dash }}",
-  "image_repo": "",
-  "_copy_without_render": [
-    ".helm/charts/*/templates/*.yaml",
-    ".helm/charts/*/templates/*.tpl",
-    ".helm/templates/*.tpl"
-  ]
+  "image_repo": ""
 }

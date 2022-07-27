@@ -1,0 +1,7 @@
+domain: ""
+
+backend:
+  s3:
+    bucketName: ""
+
+  sentryEnvironment: dev

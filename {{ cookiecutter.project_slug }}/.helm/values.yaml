@@ -1,89 +1,100 @@
-pullSecret:
-  registry: registry.gitlab.com
+domain: ""
 
-global:
-  backend:
-    image:
-      repository: {{ cookiecutter.image_repo }}
-      tag: latest
-      pullPolicy: IfNotPresent
-      pullSecrets:
-        - {{ cookiecutter.project_dash }}-pullsecret
-    env:
-      CONTAINER_PORT: 8000
+backend:
+  image:
+    repository: ""
+    tag: latest
+    pullPolicy: IfNotPresent
 
-      DJANGO_DEBUG: "off"
-      DJANGO_SECRET_KEY: ""
-      DJANGO_ALLOWED_HOSTS: ""
+  debug: "off"
+  secretKey: ""
+  defaultFromEmail: ""
 
-      AWS_S3_ENDPOINT_URL: ""
-      AWS_ACCESS_KEY_ID: ""
-      AWS_S3_BUCKET_NAME: ""
+  s3:
+    endpointUrl: "https://storage.yandexcloud.net/"
+    accessKey: ""
+    secretKey: ""
+    bucketName: ""
+    publicUrl: ""
 
-      MAILGUN_SENDER_DOMAIN: ""
-      DJANGO_DEFAULT_FROM_EMAIL: ""
+  mailgun:
+    senderDomain: ""
+    apiKey: ""
 
-web:
-  replicaCount: 1
+  sentryDsn: ""
+  sentryEnvironment: ""
 
-  resources: {}
+  databaseUrl: "postgres://{{ cookiecutter.project_dash }}:{{ cookiecutter.project_dash }}@{{ cookiecutter.project_dash }}-postgresql:5432/{{ cookiecutter.project_dash }}"
 
-  ingress:
-    hosts:
-      - host:
-        paths:
-        - /api
-        - /static
+  api:
+    replicaCount: 1
 
-  livenessProbe:
-    httpGet:
-      path: /health
-      port: http
-    periodSeconds: 10
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 3
+    service:
+      port: 8000
 
-  readinessProbe:
-    httpGet:
-      path: /health
-      port: http
-    periodSeconds: 10
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 3
+    autoscaling:
+      enabled: false
 
-  startupProbe:
-    httpGet:
-      path: /health
-      port: http
-    failureThreshold: 60
-    periodSeconds: 10
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 256Mi
 
-  metrics:
-    enabled: false
-    serviceMonitor:
-      endpoints:
-      - port: http
-        path: /metrics
+    metrics:
+      enabled: true
+      serviceMonitor:
+        namespace: ""
 
-migrations:
-  resources: {}
+  waitMigrations:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 256Mi
+
+  migrations:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 256Mi
+      requests:
+        cpu: 1000m
+        memory: 256Mi
+
+ingress:
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
 
 postgresql:
   enabled: true
   image:
-    tag: 14.2.0
+    tag: 14
   postgresPassword: postgres
   auth:
     postgresPassword: postgres
-    username: {{ cookiecutter.project_slug }}
-    password: {{ cookiecutter.project_slug }}
-    database: {{ cookiecutter.project_slug }}
+    username: {{ cookiecutter.project_dash }}
+    password: {{ cookiecutter.project_dash }}
+    database: {{ cookiecutter.project_dash }}
   primary:
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 250m
+      requests:
+        memory: 256Mi
+        cpu: 250m
     persistence:
       size: 1Gi
   metrics:
-    enabled: false
+    enabled: true
     serviceMonitor:
-      enabled: false
+      enabled: true
+
+pullSecret:
+  registry: registry.gitlab.com

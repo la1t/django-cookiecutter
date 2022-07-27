@@ -1,0 +1,28 @@
+{% raw -%}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" . }}-migrations
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: migrations
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: migrations
+    spec:
+      restartPolicy: OnFailure
+      {{- include "backend.renderPullSecrets" . | nindent 6 }}
+      containers:
+      - name: migrations
+        image: {{ include "backend.image" . }}
+        imagePullPolicy: {{ include "backend.imagePullPolicy" . }}
+        command: [ "python", "manage.py", "migrate" ]
+        env: {{- include "backend.renderEnv" . | nindent 10 }}
+        {{- if .Values.backend.migrations.resources }}
+        resources: {{- toYaml .Values.backend.migrations.resources | nindent 12 }}
+        {{- end }}
+{% endraw -%}

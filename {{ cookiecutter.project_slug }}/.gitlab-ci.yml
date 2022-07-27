@@ -1,6 +1,29 @@
 stages:
+  - static analysis
   - build
+  - test
   - deploy
+
+# STATIC ANALYSIS
+
+pre-commit checks:
+  stage: static analysis
+  image:
+    name: anatolygusev/pre-commit
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+  cache:
+    paths:
+      - ${PRE_COMMIT_HOME}
+  only:
+    changes:
+      - backend/
+      - .gitlab-ci.yml
+  only: [merge_requests]
+  script:
+    - pre-commit run -a
+
+# BUILD
 
 .build:
   stage: build
@@ -30,6 +53,42 @@ build:
     IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
     CONTEXT_DIR: .
 
+# TEST
+
+test:
+  stage: test
+  image:
+    name: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
+  services:
+    - postgres
+  variables:
+    POSTGRES_DB: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+    GIT_STRATEGY: none
+  script:
+    - cd /app
+    - coverage run -m pytest --junitxml=xunit.xml -n auto
+  after_script:
+    - cd /app
+    - coverage report
+    - coverage xml
+    - cd -
+    - cp /app/xunit.xml ./ || true
+    - cp /app/coverage.xml ./ || true
+  artifacts:
+    paths:
+      - ./xunit.xml
+      - ./coverage.xml
+    reports:
+      junit: xunit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+# DEPLOY
+
 .deploy:
   image:
     name: anatolygusev/helm-secrets
@@ -37,27 +96,34 @@ build:
   stage: deploy
   variables:
     HELM_TIMEOUT: 5m
+    KUBECONTEXT: ""
   before_script:
     - echo "$CI_GPG_SECRET_KEY" | gpg --import
   script:
-    - .ops/deploy_chart.sh
-        .
-        $HELM_TIMEOUT
-        $KUBECONFIG
-        $KUBECONTEXT
-        $KUBE_NAMESPACE
-        $ENVIRONMENT
-        global.backend.image.tag
-        backend
+    - >- 
+      helm secrets upgrade
+      --kubeconfig="$KUBECONFIG"
+      --kube-context="$KUBECONTEXT"
+      --install
+      --atomic
+      --history-max 4
+      --timeout="$HELM_TIMEOUT"
+      --namespace="$KUBE_NAMESPACE"
+      --create-namespace
+      --values=".helm/secrets.yaml"
+      --values=".helm/environments/${ENVIRONMENT}/values.yaml"
+      --values=".helm/environments/${ENVIRONMENT}/secrets.yaml"
+      --set "global.backend.image.tag=$BACKEND_IMAGE_TAG"
+      {{ cookiecutter.project_dash }}
+      .helm
 
-deploy production:
+deploy dev:
   extends: .deploy
   environment:
-    name: production
+    name: dev
   only:
     refs:
       - master
   variables:
-    KUBECONTEXT: {{ cookiecutter.kubecontext }}
-    KUBE_NAMESPACE: {{ cookiecutter.project_dash }}-production
-    ENVIRONMENT: production
+    KUBE_NAMESPACE: {{ cookiecutter.project_dash }}-dev
+    ENVIRONMENT: dev

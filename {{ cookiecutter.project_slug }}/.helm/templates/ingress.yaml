@@ -1,0 +1,38 @@
+{% raw -%}
+apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.domain }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "common.names.fullname" . }}-api
+                port:
+                  number: {{ .Values.backend.api.service.port }}
+          - path: /static
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "common.names.fullname" . }}-api
+                port:
+                  number: {{ .Values.backend.api.service.port }}
+          - path: /admin
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "common.names.fullname" . }}-api
+                port:
+                  number: {{ .Values.backend.api.service.port }}
+{% endraw -%}
