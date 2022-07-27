@@ -36,13 +36,14 @@ RUN apt update && \
 RUN mkdir -p /home/$USERNAME/.vscode-server/extensions && \
     chown -R $USERNAME /home/$USERNAME/.vscode-server
 
-# Install poetry
-RUN pip install poetry
-
 USER vscode
 
+# Install poetry
+RUN curl -sSL https://install.python-poetry.org | POETRY_PREVIEW=1 python3 -
+
 # Setup poetry
-RUN poetry config virtualenvs.in-project true
+RUN /home/$USERNAME/.local/bin/poetry config virtualenvs.in-project true && \
+    /home/$USERNAME/.local/bin/poetry config virtualenvs.options.always-copy true
 
 # Install helm-secrets
 RUN helm plugin install https://github.com/jkroepke/helm-secrets --version v3.12.0
