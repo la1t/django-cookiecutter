@@ -24,7 +24,7 @@ pytest-django = "^4.5.2"
 pytest-mock = "^3.7.0"
 pytest-factoryboy = "^2.1.0"
 djangorestframework-simplejwt = "^5.1.0"
-django-mptt = "^0.13.4"
+django-mptt = "^0.14.0"
 argon2-cffi = "^21.3.0"
 ipython = "^8.2.0"
 
