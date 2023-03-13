@@ -17,7 +17,7 @@ sentry-sdk = "^1.5.7"
 whitenoise = "^6.0.0"
 django-s3-storage = "^0.13.6"
 drf-yasg = {git = "https://github.com/PetrDlouhy/drf-yasg.git", rev = "0c14a4fa905cec9875d64f36fd3bfe4032528b08"}
-django-anymail = {extras = ["mailgun"], version = "^8.5"}
+django-anymail = {extras = ["mailgun"], version = "^9.1"}
 django-extensions = "^3.1.5"
 pytest = "^7.1.0"
 pytest-django = "^4.5.2"
